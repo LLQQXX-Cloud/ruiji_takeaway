@@ -6,7 +6,7 @@
 package com.example.takeaway.service.impl;
 
 import com.example.takeaway.entity.Address;
-import com.example.takeaway.mapper.Mapper.AddressMapper;
+import com.example.takeaway.mapper.impl.AddressRepository;
 import com.example.takeaway.service.Service.AddressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,11 +17,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AddressServiceImpl implements AddressService {
     
-    private final AddressMapper addressMapper;
+    private final AddressRepository addressMapper;
     
     @Override
     public Address findById(Long id) {
-        return addressMapper.findById(id);
+        return addressMapper.findById(id).orElse(null);
     }
     
     @Override
@@ -31,7 +31,7 @@ public class AddressServiceImpl implements AddressService {
     
     @Override
     public Address findDefaultByUserId(Long userId) {
-        return addressMapper.findDefaultByUserId(userId);
+        return addressMapper.findByUserIdAndIsDefaultTrue(userId);
     }
     
     @Override
@@ -44,36 +44,31 @@ public class AddressServiceImpl implements AddressService {
         if (address.getIsDefault()) {
             clearDefault(address.getUserId());
         }
-        addressMapper.insert(address);
-        return address;
+        return addressMapper.save(address);
     }
     
     @Override
     public Address updateAddress(Address address) {
-        Address existing = addressMapper.findById(address.getId());
+        Address existing = addressMapper.findById(address.getId()).orElse(null);
         if (existing != null && !existing.getUserId().equals(address.getUserId())) {
-            throw new RuntimeException("鏃犳潈淇敼姝ゅ湴鍧€");
+            throw new RuntimeException("无权修改此地址");
         }
         if (address.getIsDefault() != null && address.getIsDefault()) {
             clearDefault(address.getUserId());
         }
-        addressMapper.update(address);
-        return address;
+        return addressMapper.save(address);
     }
     
     @Override
     public void deleteAddress(Long id) {
-        Address address = addressMapper.findById(id);
-        if (address != null) {
-            addressMapper.deleteById(id);
-        }
+        addressMapper.deleteById(id);
     }
     
     private void clearDefault(Long userId) {
-        Address defaultAddr = addressMapper.findDefaultByUserId(userId);
+        Address defaultAddr = addressMapper.findByUserIdAndIsDefaultTrue(userId);
         if (defaultAddr != null) {
             defaultAddr.setIsDefault(false);
-            addressMapper.update(defaultAddr);
+            addressMapper.save(defaultAddr);
         }
     }
 }

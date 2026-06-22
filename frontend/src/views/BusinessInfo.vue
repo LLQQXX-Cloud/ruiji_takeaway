@@ -7,9 +7,9 @@
         <div></div>
       </div>
     </header>
-    
+
     <div class="content">
-      <div v-if="loading" class="loading">加载中...</div>
+      <div v-if="loading" class="loading"><div class="spinner"></div><p>加载中...</p></div>
       <div v-else class="form-container">
         <form @submit.prevent="saveInfo">
           <div class="form-section">
@@ -30,20 +30,20 @@
             </div>
             <div class="form-group">
               <label>店铺描述</label>
-              <textarea v-model="formData.description" placeholder="请输入店铺描述"></textarea>
+              <textarea v-model="formData.description" placeholder="描述您店铺的特色..."></textarea>
             </div>
           </div>
-          
+
           <div class="form-section">
             <h3>营业信息</h3>
             <div class="form-row">
               <div class="form-group">
-                <label>起送价</label>
-                <input v-model.number="formData.startPrice" type="number" step="0.01" placeholder="起送价" />
+                <label>起送价 (元)</label>
+                <input v-model.number="formData.startPrice" type="number" step="0.01" placeholder="0.00" />
               </div>
               <div class="form-group">
-                <label>配送费</label>
-                <input v-model.number="formData.deliveryFee" type="number" step="0.01" placeholder="配送费" />
+                <label>配送费 (元)</label>
+                <input v-model.number="formData.deliveryFee" type="number" step="0.01" placeholder="0.00" />
               </div>
             </div>
             <div class="form-row">
@@ -63,18 +63,18 @@
               </div>
             </div>
           </div>
-          
+
           <div class="form-section">
             <h3>图片设置</h3>
             <div class="form-group">
-              <label>店铺图片URL</label>
-              <input v-model="formData.image" type="text" placeholder="请输入图片URL" />
+              <label>店铺封面图片 URL</label>
+              <input v-model="formData.image" type="text" placeholder="https://example.com/image.jpg" />
               <div v-if="formData.image" class="preview">
                 <img :src="formData.image" alt="店铺图片" />
               </div>
             </div>
           </div>
-          
+
           <div class="form-actions">
             <button type="button" @click="resetForm" class="btn-cancel">重置</button>
             <button type="submit" class="btn-submit">保存修改</button>
@@ -82,7 +82,7 @@
         </form>
       </div>
     </div>
-    
+
     <div v-if="showToast" class="toast">{{ toastMessage }}</div>
   </div>
 </template>
@@ -98,24 +98,14 @@ const showToast = ref(false)
 const toastMessage = ref('')
 
 const formData = reactive({
-  name: '',
-  phone: '',
-  address: '',
-  description: '',
-  startPrice: 0,
-  deliveryFee: 0,
-  status: 1,
-  image: '',
-  categoryId: null
+  name: '', phone: '', address: '', description: '',
+  startPrice: 0, deliveryFee: 0, status: 1, image: '', categoryId: null
 })
 
 const categories = [
-  { id: 1, name: '快餐便当' },
-  { id: 2, name: '中式美食' },
-  { id: 3, name: '西式料理' },
-  { id: 4, name: '日韩料理' },
-  { id: 5, name: '甜品饮品' },
-  { id: 6, name: '烧烤火锅' }
+  { id: 1, name: '快餐便当' }, { id: 2, name: '中式美食' },
+  { id: 3, name: '西式料理' }, { id: 4, name: '日韩料理' },
+  { id: 5, name: '甜品饮品' }, { id: 6, name: '烧烤火锅' }
 ]
 
 const originalData = reactive({})
@@ -123,233 +113,89 @@ const originalData = reactive({})
 const loadBusinessInfo = async () => {
   loading.value = true
   const businessId = localStorage.getItem('businessId')
-  
   try {
     const res = await businessApi.getById(businessId)
     if (res.data.success) {
       const data = res.data.data
-      formData.name = data.name
-      formData.phone = data.phone || ''
-      formData.address = data.address || ''
-      formData.description = data.description || ''
-      formData.startPrice = data.startPrice || 0
-      formData.deliveryFee = data.deliveryFee || 0
-      formData.status = data.status || 1
-      formData.image = data.image || ''
-      formData.categoryId = data.categoryId || null
-      
+      formData.name = data.name; formData.phone = data.phone || ''; formData.address = data.address || ''
+      formData.description = data.description || ''; formData.startPrice = data.startPrice || 0
+      formData.deliveryFee = data.deliveryFee || 0; formData.status = data.status || 1
+      formData.image = data.image || ''; formData.categoryId = data.categoryId || null
       Object.assign(originalData, formData)
     }
-  } catch (error) {
-    console.error('加载店铺信息失败:', error)
-  } finally {
-    loading.value = false
-  }
+  } catch (error) { console.error('加载店铺信息失败:', error) }
+  finally { loading.value = false }
 }
 
 const saveInfo = async () => {
   try {
     const businessId = localStorage.getItem('businessId')
     const payload = {
-      name: formData.name,
-      phone: formData.phone,
-      address: formData.address,
-      description: formData.description,
-      startPrice: formData.startPrice,
-      deliveryFee: formData.deliveryFee,
-      status: formData.status,
-      image: formData.image,
-      categoryId: formData.categoryId ? Number(formData.categoryId) : null
+      name: formData.name, phone: formData.phone, address: formData.address,
+      description: formData.description, startPrice: formData.startPrice,
+      deliveryFee: formData.deliveryFee, status: formData.status,
+      image: formData.image, categoryId: formData.categoryId ? Number(formData.categoryId) : null
     }
-    console.log('保存的数据:', JSON.stringify(payload))
-    console.log('categoryId类型:', typeof payload.categoryId, '值:', payload.categoryId)
     const res = await businessApi.update(businessId, payload)
-    if (res.data.success) {
-      showToastMessage('修改成功')
-      Object.assign(originalData, formData)
-    }
-  } catch (error) {
-    showToastMessage('修改失败')
-  }
+    if (res.data.success) { showToastMessage('修改成功'); Object.assign(originalData, formData) }
+  } catch (error) { showToastMessage('修改失败') }
 }
 
-const resetForm = () => {
-  Object.assign(formData, originalData)
-}
+const resetForm = () => { Object.assign(formData, originalData) }
 
-const showToastMessage = (msg) => {
-  toastMessage.value = msg
-  showToast.value = true
-  setTimeout(() => {
-    showToast.value = false
-  }, 2000)
-}
-
-const goBack = () => {
-  router.push('/business-home')
-}
+const showToastMessage = (msg) => { toastMessage.value = msg; showToast.value = true; setTimeout(() => showToast.value = false, 2000) }
+const goBack = () => router.push('/business-home')
 
 onMounted(() => {
-  const role = localStorage.getItem('role')
-  const business = localStorage.getItem('business')
-  
-  if (!business || role !== 'business') {
-    router.push('/business-login')
-    return
-  }
-  
+  const role = localStorage.getItem('role'); const business = localStorage.getItem('business')
+  if (!business || role !== 'business') { router.push('/business-login'); return }
   loadBusinessInfo()
 })
 </script>
 
 <style scoped>
-.business-info {
-  min-height: 100vh;
-  background: #f5f5f5;
-}
+.business-info { min-height: 100vh; background: #f8f9fb; }
 
-.header {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  color: white;
-  padding: 15px 20px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
+.header { background: linear-gradient(135deg, #0d9488 0%, #115e59 100%); color: white; padding: 16px 24px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 24px rgba(13, 148, 136, 0.2); }
+.header-content { max-width: 800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+.header h2 { margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.3px; }
+.btn-back { padding: 10px 20px; background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 14px; font-family: inherit; transition: all 0.25s; }
+.btn-back:hover { background: rgba(255, 255, 255, 0.2); }
 
-.header-content {
-  max-width: 800px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+.content { max-width: 800px; margin: 32px auto; padding: 0 24px; }
+.loading { text-align: center; padding: 80px 20px; color: #9ca3af; }
+.spinner { width: 36px; height: 36px; border: 3px solid #e5e7eb; border-top-color: #0d9488; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-.header h2 {
-  margin: 0;
-  font-size: 20px;
-}
+.form-container { background: white; border-radius: 20px; padding: 36px; box-shadow: 0 2px 16px rgba(0, 0, 0, 0.04); }
 
-.btn-back {
-  padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 1px solid white;
-  border-radius: 6px;
-  cursor: pointer;
-}
+.form-section { margin-bottom: 32px; padding-bottom: 28px; border-bottom: 1px solid #f3f4f6; }
+.form-section:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.form-section h3 { margin: 0 0 20px; color: #1a1a2e; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
 
-.content {
-  max-width: 800px;
-  margin: 30px auto;
-  padding: 0 20px;
-}
-
-.loading {
-  text-align: center;
-  padding: 60px 20px;
-  background: white;
-  border-radius: 12px;
-  color: #999;
-}
-
-.form-container {
-  background: white;
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-}
-
-.form-section {
-  margin-bottom: 30px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.form-section:last-of-type {
-  border-bottom: none;
-}
-
-.form-section h3 {
-  margin-bottom: 20px;
-  color: #333;
-  font-size: 16px;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-  color: #333;
-}
-
+.form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.form-group { margin-bottom: 20px; }
+.form-group:last-child { margin-bottom: 0; }
+.form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #374151; font-size: 13px; }
 .form-group input, .form-group textarea, .form-group select {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 14px;
-  box-sizing: border-box;
+  width: 100%; padding: 13px 16px; border: 2px solid #e5e7eb; border-radius: 12px;
+  font-size: 14px; font-family: inherit; box-sizing: border-box;
+  transition: all 0.3s; background: #fafbfc; color: #1a1a2e;
 }
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+  outline: none; border-color: #0d9488; background: white;
+  box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.08);
+}
+.form-group textarea { min-height: 100px; resize: vertical; }
 
-.form-group textarea {
-  min-height: 100px;
-}
+.preview { margin-top: 14px; }
+.preview img { max-width: 280px; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
 
-.preview {
-  margin-top: 15px;
-}
+.form-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 32px; }
+.btn-cancel { padding: 13px 28px; background: #f3f4f6; color: #6b7280; border: none; border-radius: 14px; cursor: pointer; font-weight: 600; font-size: 14px; font-family: inherit; transition: all 0.25s; }
+.btn-cancel:hover { background: #e5e7eb; }
+.btn-submit { padding: 13px 28px; background: linear-gradient(135deg, #0d9488, #059669); color: white; border: none; border-radius: 14px; cursor: pointer; font-weight: 700; font-size: 14px; font-family: inherit; box-shadow: 0 4px 16px rgba(13, 148, 136, 0.3); transition: all 0.3s; }
+.btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(13, 148, 136, 0.4); }
 
-.preview img {
-  max-width: 300px;
-  border-radius: 8px;
-}
-
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 15px;
-  margin-top: 30px;
-}
-
-.btn-cancel {
-  padding: 12px 24px;
-  background: #f0f0f0;
-  color: #666;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.btn-submit {
-  padding: 12px 24px;
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.toast {
-  position: fixed;
-  top: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 14px;
-  z-index: 1001;
-}
+.toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: #1a1a2e; color: white; padding: 14px 28px; border-radius: 14px; font-size: 14px; font-weight: 600; z-index: 1001; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25); }
 </style>

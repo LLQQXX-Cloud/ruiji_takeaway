@@ -1,5 +1,6 @@
 /**
- * 鍥剧墖浠ｇ悊鎺у埗鍣? * 瑙ｅ喅鍓嶇璺ㄥ煙璁块棶绗笁鏂瑰浘鐗囩殑闂锛岄€氳繃鍚庣浠ｇ悊杞彂鍥剧墖璇锋眰
+ * 图片代理控制器
+ * 解决前端跨域访问第三方图片的问题，通过后端代理转发图片请求
  */
 package com.example.takeaway.controller;
 
@@ -18,9 +19,10 @@ public class ImageProxyController {
     private final RestTemplate restTemplate = new RestTemplate();
 
     /**
-     * 浠ｇ悊鑾峰彇鍥剧墖
-     * @param url 鍥剧墖鍘熷 URL
-     * @return 鍥剧墖浜岃繘鍒舵暟鎹?     */
+     * 代理获取图片
+     * @param url 图片原始 URL
+     * @return 图片二进制数据
+     */
     @GetMapping("/proxy")
     public ResponseEntity<byte[]> proxyImage(@RequestParam String url) {
         try {

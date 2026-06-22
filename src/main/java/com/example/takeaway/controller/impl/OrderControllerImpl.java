@@ -23,6 +23,11 @@ public class OrderControllerImpl implements OrderController {
     @Autowired
     private OrderService orderService;
 
+    /**
+     * 创建订单
+     * @param order 订单信息
+     * @return 创建结果
+     */
     @Override
     @PostMapping
     public ResponseEntity<Map<String, Object>> create(@RequestBody Orders order) {
@@ -39,6 +44,11 @@ public class OrderControllerImpl implements OrderController {
         }
     }
 
+    /**
+     * 根据ID获取订单详情
+     * @param id 订单ID
+     * @return 订单详情
+     */
     @Override
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> getById(@PathVariable Long id) {
@@ -55,6 +65,11 @@ public class OrderControllerImpl implements OrderController {
         }
     }
 
+    /**
+     * 根据订单号获取订单
+     * @param orderNumber 订单号
+     * @return 订单详情
+     */
     @Override
     @GetMapping("/number/{orderNumber}")
     public ResponseEntity<Map<String, Object>> getByOrderNumber(@PathVariable String orderNumber) {
@@ -71,6 +86,11 @@ public class OrderControllerImpl implements OrderController {
         }
     }
 
+    /**
+     * 获取用户订单列表
+     * @param userId 用户ID
+     * @return 用户订单列表（排除已被用户删除的）
+     */
     @Override
     @GetMapping("/user/{userId}")
     public ResponseEntity<Map<String, Object>> getByUser(@PathVariable Long userId) {
@@ -87,6 +107,11 @@ public class OrderControllerImpl implements OrderController {
         }
     }
 
+    /**
+     * 获取商家订单列表
+     * @param businessId 商家ID
+     * @return 商家订单列表（排除已被商家删除的）
+     */
     @Override
     @GetMapping("/business/{businessId}")
     public ResponseEntity<Map<String, Object>> getByBusiness(@PathVariable Long businessId) {
@@ -103,6 +128,12 @@ public class OrderControllerImpl implements OrderController {
         }
     }
 
+    /**
+     * 更新订单状态
+     * @param id 订单ID
+     * @param data 包含状态的 Map
+     * @return 更新后的订单
+     */
     @Override
     @PutMapping("/{id}/status")
     public ResponseEntity<Map<String, Object>> updateStatus(@PathVariable Long id, @RequestBody Map<String, Integer> data) {
@@ -118,7 +149,94 @@ public class OrderControllerImpl implements OrderController {
             return ResponseEntity.badRequest().body(response);
         }
     }
+    
+    /**
+     * 用户申请取消订单
+     * 用户在待接单期间取消订单需要商家同意
+     * @param id 订单ID
+     * @return 更新后的订单
+     */
+    @PutMapping("/{id}/cancel/apply")
+    public ResponseEntity<Map<String, Object>> applyCancelByUser(@PathVariable Long id) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Orders order = orderService.applyCancelByUser(id);
+            response.put("success", true);
+            response.put("data", order);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+    
+    /**
+     * 商家同意用户取消订单
+     * @param id 订单ID
+     * @return 更新后的订单
+     */
+    @PutMapping("/{id}/cancel/approve")
+    public ResponseEntity<Map<String, Object>> approveCancelByBusiness(@PathVariable Long id) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Orders order = orderService.approveCancelByBusiness(id);
+            response.put("success", true);
+            response.put("data", order);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+    
+    /**
+     * 商家拒绝用户取消订单
+     * @param id 订单ID
+     * @return 更新后的订单
+     */
+    @PutMapping("/{id}/cancel/reject")
+    public ResponseEntity<Map<String, Object>> rejectCancelByBusiness(@PathVariable Long id) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Orders order = orderService.rejectCancelByBusiness(id);
+            response.put("success", true);
+            response.put("data", order);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+    
+    /**
+     * 商家取消订单
+     * @param id 订单ID
+     * @return 更新后的订单
+     */
+    @PutMapping("/{id}/cancel/business")
+    public ResponseEntity<Map<String, Object>> cancelByBusiness(@PathVariable Long id) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Orders order = orderService.cancelByBusiness(id);
+            response.put("success", true);
+            response.put("data", order);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
 
+    /**
+     * 更新订单信息
+     * @param id 订单ID
+     * @param order 更新后的订单信息
+     * @return 更新结果
+     */
     @Override
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, Object>> update(@PathVariable Long id, @RequestBody Orders order) {
@@ -136,6 +254,11 @@ public class OrderControllerImpl implements OrderController {
         }
     }
 
+    /**
+     * 删除订单（物理删除）
+     * @param id 订单ID
+     * @return 删除结果
+     */
     @Override
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, Object>> delete(@PathVariable Long id) {
@@ -151,6 +274,11 @@ public class OrderControllerImpl implements OrderController {
         }
     }
     
+    /**
+     * 用户软删除订单（从用户订单列表中移除）
+     * @param orderId 订单ID
+     * @return 删除结果
+     */
     @Override
     @DeleteMapping("/{orderId}/user")
     public ResponseEntity<Map<String, Object>> deleteByUser(@PathVariable Long orderId) {
@@ -167,6 +295,11 @@ public class OrderControllerImpl implements OrderController {
         }
     }
     
+    /**
+     * 商家软删除订单（从商家订单列表中移除）
+     * @param orderId 订单ID
+     * @return 删除结果
+     */
     @Override
     @DeleteMapping("/{orderId}/business")
     public ResponseEntity<Map<String, Object>> deleteByBusiness(@PathVariable Long orderId) {

@@ -10,6 +10,7 @@ import BusinessHome from '../views/BusinessHome.vue'
 import BusinessInfo from '../views/BusinessInfo.vue'
 import FoodManage from '../views/FoodManage.vue'
 import BusinessOrders from '../views/BusinessOrders.vue'
+import BusinessReviews from '../views/BusinessReviews.vue'
 
 const routes = [
   {
@@ -70,6 +71,11 @@ const routes = [
     path: '/business-orders',
     name: 'BusinessOrders',
     component: BusinessOrders
+  },
+  {
+    path: '/business-reviews',
+    name: 'BusinessReviews',
+    component: BusinessReviews
   }
 ]
 

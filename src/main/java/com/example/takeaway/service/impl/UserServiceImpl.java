@@ -6,7 +6,7 @@
 package com.example.takeaway.service.impl;
 
 import com.example.takeaway.entity.User;
-import com.example.takeaway.mapper.Mapper.UserMapper;
+import com.example.takeaway.mapper.impl.UserRepository;
 import com.example.takeaway.service.CacheService;
 import com.example.takeaway.service.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
     private static final String USER_KEY_PREFIX = "user:info:";
 
     @Autowired
-    private UserMapper userMapper;
+    private UserRepository userMapper;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;

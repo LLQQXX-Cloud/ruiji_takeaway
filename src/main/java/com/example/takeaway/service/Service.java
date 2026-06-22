@@ -68,6 +68,11 @@ public interface Service {
         List<Orders> findByBusinessIdActive(Long businessId);
         void deleteByUser(Long orderId);
         void deleteByBusiness(Long orderId);
+
+        Orders applyCancelByUser(Long id);
+        Orders approveCancelByBusiness(Long id);
+        Orders rejectCancelByBusiness(Long id);
+        Orders cancelByBusiness(Long id);
     }
 
     interface ReviewService {
@@ -79,6 +84,7 @@ public interface Service {
         Review addReview(Review review);
         Review updateReview(Review review);
         void deleteReview(Long id);
+        void deleteAllReviews();
     }
 
     interface UserService {

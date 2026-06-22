@@ -1,14 +1,14 @@
 <template>
   <div class="login-container">
     <div class="login-box">
-      <h1>商家登录</h1>
-      <p class="subtitle">欢迎回来，管理您的店铺</p>
-      
+      <h1>商家中心</h1>
+      <p class="subtitle">管理您的店铺，触达更多顾客</p>
+
       <div class="tabs">
         <button :class="{ active: activeTab === 'login' }" @click="activeTab = 'login'">商家登录</button>
         <button :class="{ active: activeTab === 'register' }" @click="activeTab = 'register'">商家注册</button>
       </div>
-      
+
       <form @submit.prevent="handleSubmit">
         <div v-if="activeTab === 'login'" class="form-content">
           <div class="form-group">
@@ -18,7 +18,7 @@
             <input v-model="loginForm.password" type="password" placeholder="密码" required />
           </div>
         </div>
-        
+
         <div v-else class="form-content">
           <div class="form-group">
             <input v-model="registerForm.username" type="text" placeholder="商家账号" required />
@@ -36,12 +36,12 @@
             <input v-model="registerForm.address" type="text" placeholder="店铺地址" />
           </div>
         </div>
-        
+
         <button type="submit" class="btn-primary">{{ activeTab === 'login' ? '登录' : '注册' }}</button>
       </form>
-      
+
       <p v-if="message" :class="['message', messageType]">{{ message }}</p>
-      
+
       <p class="switch-link">
         <a @click="goToUserLogin">返回用户登录</a>
       </p>
@@ -81,6 +81,7 @@ const handleSubmit = async () => {
         localStorage.setItem('business', JSON.stringify(res.data.data))
         localStorage.setItem('businessId', res.data.data.id)
         localStorage.setItem('role', 'business')
+        if (res.data.token) localStorage.setItem('token', res.data.token)
         messageType.value = 'success'
         message.value = '登录成功！'
         setTimeout(() => {
@@ -121,69 +122,94 @@ const goToUserLogin = () => {
   justify-content: center;
   position: relative;
   overflow: hidden;
-  background-image: url('https://ts1.tc.mm.bing.net/th/id/OIP-C.e6d5gn9zGiH356c_pbj_tAAAAA?w=193&h=136&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background: linear-gradient(135deg, #0a1628 0%, #0f2027 30%, #1a3a3a 60%, #203a43 100%);
+}
+
+.login-container::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -30%;
+  width: 80%;
+  height: 100%;
+  background: radial-gradient(ellipse, rgba(13, 148, 136, 0.15) 0%, transparent 70%);
+  animation: float 22s ease-in-out infinite;
 }
 
 .login-container::after {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.1);
+  bottom: -40%;
+  right: -20%;
+  width: 70%;
+  height: 90%;
+  background: radial-gradient(ellipse, rgba(5, 150, 105, 0.1) 0%, transparent 70%);
+  animation: float 28s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(-25px, 25px) rotate(-2deg); }
+  66% { transform: translate(20px, -15px) rotate(1deg); }
 }
 
 .login-box {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 48px 40px;
+  border-radius: 24px;
+  box-shadow: 0 32px 64px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
   position: relative;
   z-index: 10;
 }
 
 h1 {
   text-align: center;
-  color: #333;
-  margin-bottom: 8px;
-  font-size: 28px;
+  color: #1a1a2e;
+  margin-bottom: 6px;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
 }
 
 .subtitle {
   text-align: center;
-  color: #999;
-  margin-bottom: 30px;
+  color: #9ca3af;
+  margin-bottom: 32px;
   font-size: 14px;
+  font-weight: 500;
 }
 
 .tabs {
   display: flex;
-  gap: 10px;
-  margin-bottom: 30px;
+  gap: 8px;
+  margin-bottom: 36px;
+  background: #f3f4f6;
+  border-radius: 14px;
+  padding: 5px;
 }
 
 .tabs button {
   flex: 1;
   padding: 12px;
   border: none;
-  background: #f0f0f0;
-  color: #666;
-  border-radius: 8px;
+  background: transparent;
+  color: #6b7280;
+  border-radius: 11px;
   cursor: pointer;
-  transition: all 0.3s;
-  font-size: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
 }
 
 .tabs button.active {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: linear-gradient(135deg, #0d9488 0%, #059669 100%);
   color: white;
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
 }
 
 .form-group {
@@ -192,65 +218,84 @@ h1 {
 
 .form-group input {
   width: 100%;
-  padding: 14px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
+  padding: 15px 18px;
+  border: 2px solid #e5e7eb;
+  border-radius: 14px;
+  font-size: 15px;
   box-sizing: border-box;
-  transition: border-color 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #fafbfc;
+  font-family: inherit;
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #f5576c;
+  border-color: #0d9488;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.1);
 }
 
 .btn-primary {
   width: 100%;
-  padding: 14px;
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  padding: 15px;
+  background: linear-gradient(135deg, #0d9488 0%, #059669 100%);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 14px;
   font-size: 16px;
+  font-weight: 700;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 16px rgba(13, 148, 136, 0.3);
+  font-family: inherit;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(13, 148, 136, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
 }
 
 .message {
   margin-top: 20px;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 14px 18px;
+  border-radius: 12px;
   text-align: center;
   font-size: 14px;
+  font-weight: 500;
 }
 
 .message.success {
-  background: #d4edda;
-  color: #155724;
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
 }
 
 .message.error {
-  background: #f8d7da;
-  color: #721c24;
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
 }
 
 .switch-link {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 24px;
 }
 
 .switch-link a {
-  color: #f5576c;
+  color: #0d9488;
   text-decoration: none;
   font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s;
 }
 
 .switch-link a:hover {
-  text-decoration: underline;
+  color: #059669;
 }
 </style>

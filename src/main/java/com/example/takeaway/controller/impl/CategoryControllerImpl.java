@@ -7,7 +7,7 @@ package com.example.takeaway.controller.impl;
 
 import com.example.takeaway.controller.Controller.CategoryController;
 import com.example.takeaway.entity.Category;
-import com.example.takeaway.mapper.Mapper.CategoryMapper;
+import com.example.takeaway.mapper.impl.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,8 +22,12 @@ import java.util.List;
 public class CategoryControllerImpl implements CategoryController {
 
     @Autowired
-    private CategoryMapper categoryMapper;
+    private CategoryRepository categoryMapper;
 
+    /**
+     * 获取所有分类
+     * @return 分类列表
+     */
     @Override
     @GetMapping
     public ResponseEntity<List<Category>> findAll() {

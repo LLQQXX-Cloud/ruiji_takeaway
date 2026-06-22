@@ -16,22 +16,22 @@ public interface Controller {
 
     interface AddressController {
         @GetMapping("/api/address")
-        ResponseEntity<List<Address>> getAddresses(@RequestParam Long userId);
+        ResponseEntity<Map<String, Object>> getAddresses(@RequestParam Long userId);
 
         @GetMapping("/api/address/default")
-        ResponseEntity<Address> getDefaultAddress(@RequestParam Long userId);
+        ResponseEntity<Map<String, Object>> getDefaultAddress(@RequestParam Long userId);
 
         @GetMapping("/api/address/{id}")
-        ResponseEntity<Address> getAddress(@PathVariable Long id);
+        ResponseEntity<Map<String, Object>> getAddress(@PathVariable Long id);
 
         @PostMapping("/api/address")
-        ResponseEntity<Address> addAddress(@RequestBody Address address);
+        ResponseEntity<Map<String, Object>> addAddress(@RequestBody Address address);
 
         @PutMapping("/api/address/{id}")
-        ResponseEntity<Address> updateAddress(@PathVariable Long id, @RequestBody Address address);
+        ResponseEntity<Map<String, Object>> updateAddress(@PathVariable Long id, @RequestBody Address address);
 
         @DeleteMapping("/api/address/{id}")
-        ResponseEntity<Void> deleteAddress(@PathVariable Long id);
+        ResponseEntity<Map<String, Object>> deleteAddress(@PathVariable Long id);
     }
 
     interface BusinessController {
@@ -148,25 +148,28 @@ public interface Controller {
 
     interface ReviewController {
         @GetMapping("/api/review/business/{businessId}")
-        ResponseEntity<List<Review>> getReviewsByBusiness(@PathVariable Long businessId);
+        ResponseEntity<Map<String, Object>> getReviewsByBusiness(@PathVariable Long businessId);
 
         @GetMapping("/api/review/order/{orderId}")
-        ResponseEntity<Review> getReviewByOrder(@PathVariable Long orderId);
+        ResponseEntity<Map<String, Object>> getReviewByOrder(@PathVariable Long orderId);
 
         @GetMapping("/api/review/user/{userId}")
-        ResponseEntity<List<Review>> getReviewsByUser(@PathVariable Long userId);
+        ResponseEntity<Map<String, Object>> getReviewsByUser(@PathVariable Long userId);
 
         @GetMapping("/api/review/rating/{businessId}")
         ResponseEntity<Map<String, Object>> getBusinessRating(@PathVariable Long businessId);
 
         @PostMapping("/api/review")
-        ResponseEntity<Review> addReview(@RequestBody Review review);
+        ResponseEntity<Map<String, Object>> addReview(@RequestBody Review review);
 
         @PutMapping("/api/review/{id}")
-        ResponseEntity<Review> updateReview(@PathVariable Long id, @RequestBody Review review);
+        ResponseEntity<Map<String, Object>> updateReview(@PathVariable Long id, @RequestBody Review review);
 
         @DeleteMapping("/api/review/{id}")
-        ResponseEntity<Void> deleteReview(@PathVariable Long id);
+        ResponseEntity<Map<String, Object>> deleteReview(@PathVariable Long id);
+
+        @DeleteMapping("/api/review/all")
+        ResponseEntity<Map<String, Object>> deleteAllReviews();
     }
 
     interface UserController {

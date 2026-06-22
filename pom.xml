@@ -41,7 +41,8 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.30</version>
+            <!-- 版本由父 POM 的 DependencyManagement 管理，无需显式指定 -->
+
             <scope>provided</scope>
         </dependency>
         

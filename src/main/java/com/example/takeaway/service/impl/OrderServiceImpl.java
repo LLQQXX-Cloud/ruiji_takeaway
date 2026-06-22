@@ -5,8 +5,10 @@
 
 package com.example.takeaway.service.impl;
 
+import com.example.takeaway.entity.OrderItem;
 import com.example.takeaway.entity.Orders;
-import com.example.takeaway.mapper.Mapper.OrdersMapper;
+import com.example.takeaway.mapper.impl.OrderItemRepository;
+import com.example.takeaway.mapper.impl.OrdersRepository;
 import com.example.takeaway.service.Service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,11 +19,30 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
-    private OrdersMapper ordersMapper;
+    private OrdersRepository ordersMapper;
+
+    @Autowired
+    private OrderItemRepository orderItemMapper;
 
     @Override
     public Orders create(Orders order) {
-        return ordersMapper.save(order);
+        // 先清空订单商品列表，保存订单获取ID
+        List<OrderItem> items = order.getOrderItems();
+        order.setOrderItems(null);
+        
+        // 保存订单
+        Orders savedOrder = ordersMapper.save(order);
+        
+        // 保存订单商品
+        if (items != null && !items.isEmpty()) {
+            for (OrderItem item : items) {
+                item.setOrder(savedOrder);
+                orderItemMapper.save(item);
+            }
+            savedOrder.setOrderItems(items);
+        }
+        
+        return savedOrder;
     }
 
     @Override
@@ -32,6 +53,7 @@ public class OrderServiceImpl implements OrderService {
         if (order.getPhone() != null) existing.setPhone(order.getPhone());
         if (order.getRemark() != null) existing.setRemark(order.getRemark());
         if (order.getStatus() != null) existing.setStatus(order.getStatus());
+        if (order.getReviewed() != null) existing.setReviewed(order.getReviewed());
         return ordersMapper.save(existing);
     }
 
@@ -66,6 +88,71 @@ public class OrderServiceImpl implements OrderService {
     public Orders updateStatus(Long id, Integer status) {
         Orders order = findById(id);
         order.setStatus(status);
+        // 如果状态变为已取消(4)，但还没有记录取消者，则设置为用户取消(默认)
+        if (status == 4 && order.getCancelledBy() == null) {
+            order.setCancelledBy(1); // 默认设为用户取消
+        }
+        return ordersMapper.save(order);
+    }
+    
+    /**
+     * 用户申请取消订单
+     * 用户在待接单期间取消订单需要商家同意
+     * @param id 订单ID
+     * @return 更新后的订单
+     */
+    public Orders applyCancelByUser(Long id) {
+        Orders order = findById(id);
+        // 只有待接单状态(0)才能申请取消
+        if (order.getStatus() != 0) {
+            throw new RuntimeException("只有待接单的订单才能申请取消");
+        }
+        order.setStatus(5); // 5表示用户申请取消中
+        order.setCancelledBy(1); // 1表示用户发起的取消申请
+        return ordersMapper.save(order);
+    }
+    
+    /**
+     * 商家同意用户取消订单
+     * @param id 订单ID
+     * @return 更新后的订单
+     */
+    public Orders approveCancelByBusiness(Long id) {
+        Orders order = findById(id);
+        // 只有用户申请取消中状态(5)才能同意取消
+        if (order.getStatus() != 5) {
+            throw new RuntimeException("订单状态不允许此操作");
+        }
+        order.setStatus(4); // 4表示已取消
+        order.setCancelledBy(1); // 1表示用户取消（商家同意）
+        return ordersMapper.save(order);
+    }
+    
+    /**
+     * 商家拒绝用户取消订单
+     * @param id 订单ID
+     * @return 更新后的订单
+     */
+    public Orders rejectCancelByBusiness(Long id) {
+        Orders order = findById(id);
+        // 只有用户申请取消中状态(5)才能拒绝取消
+        if (order.getStatus() != 5) {
+            throw new RuntimeException("订单状态不允许此操作");
+        }
+        order.setStatus(0); // 恢复为待接单状态
+        order.setCancelledBy(0); // 重置取消者
+        return ordersMapper.save(order);
+    }
+    
+    /**
+     * 商家取消订单
+     * @param id 订单ID
+     * @return 更新后的订单
+     */
+    public Orders cancelByBusiness(Long id) {
+        Orders order = findById(id);
+        order.setStatus(4);
+        order.setCancelledBy(2); // 2表示商家取消
         return ordersMapper.save(order);
     }
 

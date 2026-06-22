@@ -2,7 +2,7 @@ package com.example.takeaway.controller.impl;
 
 import com.example.takeaway.entity.CartItem;
 import com.example.takeaway.entity.Food;
-import com.example.takeaway.mapper.FoodRepository;
+import com.example.takeaway.mapper.impl.FoodRepository;
 import com.example.takeaway.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +12,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 购物车控制器
+ * 处理购物车相关的 CRUD 操作
+ */
 @RestController
 @RequestMapping("/api/cart")
 @RequiredArgsConstructor
@@ -20,6 +24,11 @@ public class CartControllerImpl {
     private final CartService cartService;
     private final FoodRepository foodRepository;
 
+    /**
+     * 获取用户购物车
+     * @param userId 用户ID
+     * @return 购物车商品列表和总价
+     */
     @GetMapping("/user/{userId}")
     public ResponseEntity<Map<String, Object>> getCart(@PathVariable Long userId) {
         List<CartItem> items = cartService.getCart(userId);
@@ -33,6 +42,11 @@ public class CartControllerImpl {
         return ResponseEntity.ok(result);
     }
 
+    /**
+     * 添加商品到购物车
+     * @param data 包含 userId、foodId、businessId、quantity 的数据
+     * @return 添加结果
+     */
     @PostMapping("/add")
     public ResponseEntity<Map<String, Object>> addItem(@RequestBody Map<String, Object> data) {
         Object userIdObj = data.get("userId");
@@ -77,6 +91,11 @@ public class CartControllerImpl {
         return ResponseEntity.ok(result);
     }
 
+    /**
+     * 更新购物车商品数量
+     * @param data 包含 userId、foodId、quantity 的数据
+     * @return 更新结果
+     */
     @PostMapping("/update")
     public ResponseEntity<Map<String, Object>> updateQuantity(@RequestBody Map<String, Object> data) {
         Object userIdObj = data.get("userId");
@@ -103,6 +122,12 @@ public class CartControllerImpl {
         return ResponseEntity.ok(result);
     }
 
+    /**
+     * 从购物车移除商品
+     * @param userId 用户ID
+     * @param foodId 商品ID
+     * @return 移除结果
+     */
     @DeleteMapping("/remove")
     public ResponseEntity<Map<String, Object>> removeItem(
             @RequestParam Long userId,
@@ -116,6 +141,11 @@ public class CartControllerImpl {
         return ResponseEntity.ok(result);
     }
 
+    /**
+     * 清空购物车
+     * @param userId 用户ID
+     * @return 清空结果
+     */
     @DeleteMapping("/clear")
     public ResponseEntity<Map<String, Object>> clearCart(@RequestParam Long userId) {
         cartService.clearCart(userId);

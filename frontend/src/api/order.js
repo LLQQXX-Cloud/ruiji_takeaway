@@ -19,6 +19,18 @@ export const orderApi = {
   updateStatus(id, status) {
     return request.put(`/orders/${id}/status`, { status })
   },
+  applyCancel(id) {
+    return request.put(`/orders/${id}/cancel/apply`)
+  },
+  approveCancel(id) {
+    return request.put(`/orders/${id}/cancel/approve`)
+  },
+  rejectCancel(id) {
+    return request.put(`/orders/${id}/cancel/reject`)
+  },
+  cancelByBusiness(id) {
+    return request.put(`/orders/${id}/cancel/business`)
+  },
   delete(id) {
     return request.delete(`/orders/${id}`)
   },

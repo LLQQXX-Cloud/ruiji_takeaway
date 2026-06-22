@@ -5,6 +5,8 @@
 
 package com.example.takeaway.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -17,14 +19,24 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "order_id", nullable = false)
-    private Long orderId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    @JsonIgnoreProperties({"orderItems", "hibernateLazyInitializer", "handler"})
+    private Orders order;
 
     @Column(name = "food_id", nullable = false)
     private Long foodId;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "food_id", insertable = false, updatable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Food food;
+
     @Column(name = "food_name", nullable = false, length = 100)
     private String foodName;
+
+    @Column(name = "image", length = 255)
+    private String image;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
@@ -35,9 +47,8 @@ public class OrderItem {
     public OrderItem() {
     }
 
-    public OrderItem(Long id, Long orderId, Long foodId, String foodName, BigDecimal price, Integer quantity) {
+    public OrderItem(Long id, Long foodId, String foodName, BigDecimal price, Integer quantity) {
         this.id = id;
-        this.orderId = orderId;
         this.foodId = foodId;
         this.foodName = foodName;
         this.price = price;
@@ -50,14 +61,6 @@ public class OrderItem {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
     }
 
     public Long getFoodId() {
@@ -76,6 +79,14 @@ public class OrderItem {
         this.foodName = foodName;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public BigDecimal getPrice() {
         return price;
     }
@@ -90,5 +101,21 @@ public class OrderItem {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public Food getFood() {
+        return food;
+    }
+
+    public void setFood(Food food) {
+        this.food = food;
+    }
+
+    public Orders getOrder() {
+        return order;
+    }
+
+    public void setOrder(Orders order) {
+        this.order = order;
     }
 }

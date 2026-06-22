@@ -9,6 +9,8 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
@@ -47,11 +49,26 @@ public class Orders {
     @Column(name = "create_time")
     private LocalDateTime createTime;
 
-    // 瀹㈡埛鏄惁鍒犻櫎璁㈠崟锛堣蒋鍒犻櫎锛?    @Column(name = "user_deleted")
+    // 用户是否删除订单(软删除)
+    @Column(name = "user_deleted")
     private Boolean userDeleted = false;
 
-    // 鍟嗗鏄惁鍒犻櫎璁㈠崟锛堣蒋鍒犻櫎锛?    @Column(name = "business_deleted")
+    // 商家是否删除订单(软删除)
+    @Column(name = "business_deleted")
     private Boolean businessDeleted = false;
+
+    // 取消者类型：0-未取消, 1-用户取消, 2-商家取消
+    @Column(name = "cancelled_by")
+    private Integer cancelledBy = 0;
+
+    // 是否已评价：0-未评价, 1-已评价
+    @Column(name = "reviewed")
+    private Integer reviewed = 0;
+
+    // 订单商品列表
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinColumn(name = "order_id", nullable = true)
+    private List<OrderItem> orderItems = new ArrayList<>();
 
     public Orders() {
     }
@@ -181,5 +198,29 @@ public class Orders {
 
     public void setBusinessDeleted(Boolean businessDeleted) {
         this.businessDeleted = businessDeleted;
+    }
+
+    public Integer getCancelledBy() {
+        return cancelledBy;
+    }
+
+    public void setCancelledBy(Integer cancelledBy) {
+        this.cancelledBy = cancelledBy;
+    }
+
+    public Integer getReviewed() {
+        return reviewed;
+    }
+
+    public void setReviewed(Integer reviewed) {
+        this.reviewed = reviewed;
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
     }
 }

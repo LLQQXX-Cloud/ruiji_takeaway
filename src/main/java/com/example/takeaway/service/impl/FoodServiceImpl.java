@@ -6,7 +6,7 @@
 package com.example.takeaway.service.impl;
 
 import com.example.takeaway.entity.Food;
-import com.example.takeaway.mapper.Mapper.FoodMapper;
+import com.example.takeaway.mapper.impl.FoodRepository;
 import com.example.takeaway.service.Service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.List;
 public class FoodServiceImpl implements FoodService {
 
     @Autowired
-    private FoodMapper foodMapper;
+    private FoodRepository foodMapper;
 
     @Override
     public Food create(Food food) {
@@ -96,7 +96,7 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     public List<Food> findByCategoryId(Long categoryId) {
-        List<Food> foods = foodMapper.findByCategoryId(categoryId);
+        List<Food> foods = foodMapper.findByCategoryIdAndStatus(categoryId, 1);
         foods.forEach(this::handleEmptyImage);
         return foods;
     }

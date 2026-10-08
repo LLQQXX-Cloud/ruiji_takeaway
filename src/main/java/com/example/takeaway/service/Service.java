@@ -34,15 +34,6 @@ public interface Service {
         Business register(Business business);
     }
 
-    interface CartService {
-        Cart add(Long userId, Long businessId, Long foodId, Integer quantity);
-        Cart update(Long userId, Long foodId, Integer quantity);
-        void remove(Long userId, Long foodId);
-        void clear(Long userId);
-        List<Cart> findByUserId(Long userId);
-        List<Cart> findByUserIdAndBusinessId(Long userId, Long businessId);
-    }
-
     interface FoodService {
         Food create(Food food);
         Food update(Food food);

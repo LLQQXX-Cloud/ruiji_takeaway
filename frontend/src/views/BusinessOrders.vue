@@ -1,21 +1,14 @@
 <template>
   <div class="business-orders">
-    <header class="header">
-      <div class="header-content">
-        <button @click="goBack" class="btn-back">← 返回</button>
-        <h2>订单管理</h2>
-        <div class="filter-tabs">
-          <button :class="{ active: statusFilter === '' }" @click="statusFilter = ''">全部</button>
-          <button :class="{ active: statusFilter === '0' }" @click="statusFilter = '0'">待确认</button>
-          <button :class="{ active: statusFilter === '1' }" @click="statusFilter = '1'">已确认</button>
-          <button :class="{ active: statusFilter === '2' }" @click="statusFilter = '2'">配送中</button>
-          <button :class="{ active: statusFilter === '3' }" @click="statusFilter = '3'">已完成</button>
-          <button :class="{ active: statusFilter === '4' }" @click="statusFilter = '4'">已取消</button>
-        </div>
-      </div>
-    </header>
-
     <div class="content">
+      <div class="filter-tabs">
+        <button :class="{ active: statusFilter === '' }" @click="statusFilter = ''">全部</button>
+        <button :class="{ active: statusFilter === '0' }" @click="statusFilter = '0'">待确认</button>
+        <button :class="{ active: statusFilter === '1' }" @click="statusFilter = '1'">已确认</button>
+        <button :class="{ active: statusFilter === '2' }" @click="statusFilter = '2'">配送中</button>
+        <button :class="{ active: statusFilter === '3' }" @click="statusFilter = '3'">已完成</button>
+        <button :class="{ active: statusFilter === '4' }" @click="statusFilter = '4'">已取消</button>
+      </div>
       <div v-if="loading" class="loading"><div class="spinner"></div><p>加载中...</p></div>
       <div v-else-if="filteredOrders.length === 0" class="empty-state">
         <div class="empty-icon">📋</div><h3>暂无订单</h3>
@@ -131,27 +124,19 @@ const deleteOrder = async (order) => { if (!confirm('确定删除？')) return; 
 const viewDetail = (order) => { selectedOrder.value = order; showDetailModal.value = true }
 const closeDetailModal = () => { showDetailModal.value = false; selectedOrder.value = null }
 const showToastMessage = (msg) => { toastMessage.value = msg; showToast.value = true; setTimeout(() => showToast.value = false, 2000) }
-const goBack = () => router.push('/business-home')
 
 onMounted(() => { const r = localStorage.getItem('role'); const b = localStorage.getItem('business'); if (!b || r !== 'business') { router.push('/business-login'); return } loadOrders() })
 </script>
 
 <style scoped>
-.business-orders { min-height: 100vh; background: #f8f9fb; }
+.business-orders { min-height: 100vh; }
 
-.header { background: linear-gradient(135deg, #0d9488 0%, #115e59 100%); color: white; padding: 18px 24px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 24px rgba(13, 148, 136, 0.2); }
+.filter-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
+.filter-tabs button { padding: 8px 18px; background: white; color: #6b7280; border: 2px solid #e5e7eb; border-radius: 100px; cursor: pointer; font-size: 13px; font-weight: 600; font-family: inherit; transition: all 0.25s; }
+.filter-tabs button:hover { border-color: #0d9488; color: #0d9488; }
+.filter-tabs button.active { background: #0d9488; color: white; border-color: #0d9488; font-weight: 700; box-shadow: 0 4px 12px rgba(13,148,136,0.2); }
 
-.header-content { max-width: 900px; margin: 0 auto; }
-.header-content h2 { margin: 0 0 14px; font-size: 20px; font-weight: 800; letter-spacing: -0.3px; display: flex; justify-content: space-between; align-items: center; }
-
-.btn-back { padding: 10px 20px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 14px; font-family: inherit; transition: all 0.25s; }
-
-.filter-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
-.filter-tabs button { padding: 8px 18px; background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.75); border: none; border-radius: 100px; cursor: pointer; font-size: 13px; font-weight: 600; font-family: inherit; transition: all 0.25s; }
-.filter-tabs button:hover { background: rgba(255,255,255,0.15); }
-.filter-tabs button.active { background: white; color: #0d9488; font-weight: 700; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-
-.content { max-width: 900px; margin: 24px auto; padding: 0 24px 60px; }
+.content { max-width: 900px; margin: 0 auto; }
 .loading { text-align: center; padding: 80px 20px; color: #9ca3af; }
 .spinner { width: 36px; height: 36px; border: 3px solid #e5e7eb; border-top-color: #0d9488; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
 @keyframes spin { to { transform: rotate(360deg); } }

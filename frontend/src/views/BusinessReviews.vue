@@ -1,12 +1,5 @@
 <template>
   <div class="reviews-container">
-    <header class="header">
-      <div class="header-content">
-        <button @click="goBack" class="btn-back">← 返回</button>
-        <h2>评价管理</h2>
-      </div>
-    </header>
-
     <div class="content">
       <div v-if="loading" class="loading"><div class="spinner"></div><p>加载中...</p></div>
       <div v-else-if="reviews.length === 0" class="empty-state">
@@ -50,8 +43,6 @@ const formatTime = (ts) => {
   return new Date(ts).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
 }
 
-const goBack = () => router.push('/business-home')
-
 const loadReviews = async () => {
   loading.value = true
   try {
@@ -63,23 +54,17 @@ const loadReviews = async () => {
 }
 
 onMounted(() => {
+  const role = localStorage.getItem('role')
   const business = localStorage.getItem('business')
-  if (!business) { router.push('/businessLogin'); return }
+  if (!business || role !== 'business') { router.push('/business-login'); return }
   loadReviews()
 })
 </script>
 
 <style scoped>
-.reviews-container { min-height: 100vh; background: #f8f9fb; }
+.reviews-container { min-height: 100vh; }
 
-.header { background: linear-gradient(135deg, #0d9488 0%, #115e59 100%); color: white; padding: 18px 24px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 24px rgba(13, 148, 136, 0.2); }
-.header-content { max-width: 900px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-.header h2 { margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.3px; }
-
-.btn-back { padding: 10px 20px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 14px; font-family: inherit; transition: all 0.25s; }
-.btn-back:hover { background: rgba(255,255,255,0.2); }
-
-.content { max-width: 900px; margin: 24px auto; padding: 0 24px 60px; }
+.content { max-width: 900px; margin: 0 auto; }
 .loading { text-align: center; padding: 80px 20px; color: #9ca3af; }
 .spinner { width: 36px; height: 36px; border: 3px solid #e5e7eb; border-top-color: #0d9488; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
 @keyframes spin { to { transform: rotate(360deg); } }

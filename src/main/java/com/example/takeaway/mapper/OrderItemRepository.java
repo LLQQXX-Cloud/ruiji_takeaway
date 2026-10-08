@@ -3,7 +3,7 @@
  * 提供订单项的数据访问操作
  */
 
-package com.example.takeaway.mapper.impl;
+package com.example.takeaway.mapper;
 
 import com.example.takeaway.entity.OrderItem;
 import org.springframework.data.jpa.repository.JpaRepository;

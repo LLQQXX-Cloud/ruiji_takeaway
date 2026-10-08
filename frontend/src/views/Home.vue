@@ -1,20 +1,5 @@
 <template>
   <div class="home-container">
-    <header class="header">
-      <div class="header-content">
-        <div class="brand">
-          <span class="brand-icon"></span>
-          <h2>瑞吉外卖</h2>
-        </div>
-        <div class="header-actions">
-          <button @click="goToAddress" class="btn-ghost">收货地址</button>
-          <button @click="goToCart" class="btn-ghost">购物车</button>
-          <button @click="goToOrders" class="btn-ghost">我的订单</button>
-          <button @click="logout" class="btn-outline">退出</button>
-        </div>
-      </div>
-    </header>
-
     <div class="search-section">
       <div class="search-bar">
         <div class="search-input-wrapper">
@@ -133,23 +118,6 @@ const goToBusiness = (id) => {
   router.push(`/business/${id}`)
 }
 
-const goToCart = () => {
-  router.push('/cart')
-}
-
-const goToOrders = () => {
-  router.push('/orders')
-}
-
-const goToAddress = () => {
-  router.push('/address')
-}
-
-const logout = () => {
-  localStorage.clear()
-  router.push('/login')
-}
-
 onMounted(() => {
   const user = localStorage.getItem('user')
   if (!user) {
@@ -167,90 +135,10 @@ onMounted(() => {
   background: #f8f9fb;
 }
 
-/* Header */
-.header {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-  color: white;
-  padding: 20px 24px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
-}
-
-.header-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.brand h2 {
-  margin: 0;
-  font-size: 24px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-  background: linear-gradient(135deg, #ff6b35, #f7931e);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.header-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.btn-ghost {
-  padding: 10px 18px;
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.25s;
-  font-weight: 500;
-  font-size: 14px;
-  font-family: inherit;
-  backdrop-filter: blur(10px);
-}
-
-.btn-ghost:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.25);
-  transform: translateY(-1px);
-}
-
-.btn-outline {
-  padding: 10px 18px;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.25s;
-  font-weight: 500;
-  font-size: 14px;
-  font-family: inherit;
-}
-
-.btn-outline:hover {
-  background: rgba(255, 107, 53, 0.2);
-  border-color: #ff6b35;
-  color: #ff6b35;
-}
-
 /* Search */
 .search-section {
   max-width: 1200px;
-  margin: 32px auto 0;
+  margin: 0 auto;
   padding: 0 24px;
 }
 

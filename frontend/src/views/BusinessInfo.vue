@@ -1,13 +1,5 @@
 <template>
   <div class="business-info">
-    <header class="header">
-      <div class="header-content">
-        <button @click="goBack" class="btn-back">← 返回</button>
-        <h2>店铺信息</h2>
-        <div></div>
-      </div>
-    </header>
-
     <div class="content">
       <div v-if="loading" class="loading"><div class="spinner"></div><p>加载中...</p></div>
       <div v-else class="form-container">
@@ -144,7 +136,6 @@ const saveInfo = async () => {
 const resetForm = () => { Object.assign(formData, originalData) }
 
 const showToastMessage = (msg) => { toastMessage.value = msg; showToast.value = true; setTimeout(() => showToast.value = false, 2000) }
-const goBack = () => router.push('/business-home')
 
 onMounted(() => {
   const role = localStorage.getItem('role'); const business = localStorage.getItem('business')
@@ -154,15 +145,9 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.business-info { min-height: 100vh; background: #f8f9fb; }
+.business-info { min-height: 100vh; }
 
-.header { background: linear-gradient(135deg, #0d9488 0%, #115e59 100%); color: white; padding: 16px 24px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 24px rgba(13, 148, 136, 0.2); }
-.header-content { max-width: 800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-.header h2 { margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.3px; }
-.btn-back { padding: 10px 20px; background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 14px; font-family: inherit; transition: all 0.25s; }
-.btn-back:hover { background: rgba(255, 255, 255, 0.2); }
-
-.content { max-width: 800px; margin: 32px auto; padding: 0 24px; }
+.content { max-width: 800px; margin: 0 auto; }
 .loading { text-align: center; padding: 80px 20px; color: #9ca3af; }
 .spinner { width: 36px; height: 36px; border: 3px solid #e5e7eb; border-top-color: #0d9488; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
 @keyframes spin { to { transform: rotate(360deg); } }

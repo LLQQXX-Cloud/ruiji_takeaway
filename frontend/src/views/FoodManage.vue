@@ -1,14 +1,9 @@
 <template>
   <div class="food-manage">
-    <header class="header">
-      <div class="header-content">
-        <button @click="goBack" class="btn-back">← 返回</button>
-        <h2>菜品管理</h2>
+    <div class="content">
+      <div class="toolbar">
         <button @click="showAddForm = true" class="btn-add">+ 添加菜品</button>
       </div>
-    </header>
-
-    <div class="content">
       <div v-if="loading" class="loading"><div class="spinner"></div><p>加载中...</p></div>
       <div v-else-if="foods.length === 0" class="empty-state">
         <div class="empty-icon">🍽</div>
@@ -158,7 +153,6 @@ const saveFood = async () => {
 
 const closeModal = () => { showAddForm.value = false; editingFood.value = null; Object.assign(formData, { name: '', price: 0, description: '', image: '', category: '', isHot: false, isNew: false }) }
 const showToastMessage = (msg) => { toastMessage.value = msg; showToast.value = true; setTimeout(() => showToast.value = false, 2000) }
-const goBack = () => router.push('/business-home')
 
 onMounted(() => {
   const role = localStorage.getItem('role'); const business = localStorage.getItem('business')
@@ -168,17 +162,13 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.food-manage { min-height: 100vh; background: #f8f9fb; }
+.food-manage { min-height: 100vh; }
 
-.header { background: linear-gradient(135deg, #0d9488 0%, #115e59 100%); color: white; padding: 16px 24px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 24px rgba(13, 148, 136, 0.2); }
-.header-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-.header h2 { margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.3px; }
-.btn-back { padding: 10px 20px; background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 14px; font-family: inherit; transition: all 0.25s; }
-.btn-back:hover { background: rgba(255, 255, 255, 0.2); }
-.btn-add { padding: 10px 22px; background: white; color: #0d9488; border: none; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 700; font-family: inherit; transition: all 0.25s; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-.btn-add:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+.toolbar { display: flex; justify-content: flex-end; margin-bottom: 20px; }
+.btn-add { padding: 10px 22px; background: linear-gradient(135deg, #0d9488, #059669); color: white; border: none; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 700; font-family: inherit; box-shadow: 0 4px 16px rgba(13,148,136,0.3); transition: all 0.25s; }
+.btn-add:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(13,148,136,0.4); }
 
-.content { max-width: 1200px; margin: 32px auto; padding: 0 24px 60px; }
+.content { max-width: 1200px; margin: 0 auto; }
 
 .loading { text-align: center; padding: 80px 20px; color: #9ca3af; }
 .spinner { width: 36px; height: 36px; border: 3px solid #e5e7eb; border-top-color: #0d9488; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }

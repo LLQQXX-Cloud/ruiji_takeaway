@@ -2,7 +2,7 @@ package com.example.takeaway.controller.impl;
 
 import com.example.takeaway.entity.CartItem;
 import com.example.takeaway.entity.Food;
-import com.example.takeaway.mapper.impl.FoodRepository;
+import com.example.takeaway.mapper.FoodRepository;
 import com.example.takeaway.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

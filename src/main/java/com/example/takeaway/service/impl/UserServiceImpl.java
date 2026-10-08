@@ -6,7 +6,7 @@
 package com.example.takeaway.service.impl;
 
 import com.example.takeaway.entity.User;
-import com.example.takeaway.mapper.impl.UserRepository;
+import com.example.takeaway.mapper.UserRepository;
 import com.example.takeaway.service.CacheService;
 import com.example.takeaway.service.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

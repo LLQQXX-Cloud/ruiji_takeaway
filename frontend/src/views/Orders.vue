@@ -1,14 +1,6 @@
 <template>
   <div class="orders-container">
-    <header class="header">
-      <div class="header-content">
-        <button @click="goHome" class="btn-back">← 返回</button>
-        <h2>我的订单</h2>
-        <div class="header-actions">
-          <button @click="refreshOrders" class="btn-ghost">刷新</button>
-          <button @click="goToCart" class="btn-ghost">购物车</button>
-        </div>
-      </div>
+    <div class="content">
       <div class="filter-tabs">
         <button :class="{ active: statusFilter === '' }" @click="statusFilter = ''">全部</button>
         <button :class="{ active: statusFilter === '0' }" @click="statusFilter = '0'">待接单</button>
@@ -17,9 +9,6 @@
         <button :class="{ active: statusFilter === '3' }" @click="statusFilter = '3'">已完成</button>
         <button :class="{ active: statusFilter === '4' }" @click="statusFilter = '4'">已取消</button>
       </div>
-    </header>
-
-    <div class="content">
       <div v-if="loading" class="loading">
         <div class="spinner"></div>
         <p>加载中...</p>
@@ -203,7 +192,6 @@ const loadOrders = async () => {
 }
 
 const viewDetail = (order) => { selectedOrder.value = order; showDetailModal.value = true }
-const refreshOrders = async () => { await loadOrders(); showToastMessage('已刷新') }
 
 const cancelOrder = async (order) => {
   if (!confirm('确定要申请取消订单吗？')) return
@@ -238,7 +226,6 @@ const showToastMessage = (msg) => { toastMessage.value = msg; showToast.value = 
 const openReview = (order) => { reviewOrderId.value = order.id; reviewBusinessId.value = order.businessId; showReviewModal.value = true }
 const handleReviewSuccess = () => { const order = orders.value.find(o => o.id === reviewOrderId.value); if (order) order.reviewed = true }
 const goHome = () => router.push('/home')
-const goToCart = () => router.push('/cart')
 
 onMounted(() => {
   const user = localStorage.getItem('user'); const userId = localStorage.getItem('userId')
@@ -250,35 +237,19 @@ onUnmounted(() => { if (refreshInterval) clearInterval(refreshInterval) })
 </script>
 
 <style scoped>
-.orders-container { min-height: 100vh; background: #f8f9fb; }
+.orders-container { min-height: 100vh; }
 
-.header {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  color: white; padding: 18px 24px;
-  position: sticky; top: 0; z-index: 100;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
-}
-
-.filter-tabs { display: flex; gap: 6px; margin-top: 16px; flex-wrap: wrap; max-width: 900px; margin-left: auto; margin-right: auto; }
+.filter-tabs { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
 .filter-tabs button {
-  padding: 8px 18px; background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.75); border: none; border-radius: 100px;
+  padding: 8px 18px; background: white;
+  color: #6b7280; border: 2px solid #e5e7eb; border-radius: 100px;
   cursor: pointer; font-size: 13px; font-weight: 600; font-family: inherit;
   transition: all 0.25s;
 }
-.filter-tabs button:hover { background: rgba(255, 255, 255, 0.15); }
-.filter-tabs button.active { background: white; color: #1a1a2e; font-weight: 700; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.filter-tabs button:hover { border-color: #ff6b35; color: #ff6b35; }
+.filter-tabs button.active { background: linear-gradient(135deg, #ff6b35, #f7931e); color: white; border-color: transparent; font-weight: 700; box-shadow: 0 4px 12px rgba(255,107,53,0.2); }
 
-.header-content { max-width: 900px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-.header-actions { display: flex; gap: 8px; }
-.header h2 { margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.3px; }
-
-.btn-back { padding: 10px 20px; background: rgba(255, 255, 255, 0.08); color: white; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.25s; font-family: inherit; }
-.btn-back:hover { background: rgba(255, 255, 255, 0.15); }
-.btn-ghost { padding: 10px 18px; background: rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.9); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; cursor: pointer; font-weight: 500; font-size: 14px; transition: all 0.25s; font-family: inherit; }
-.btn-ghost:hover { background: rgba(255, 255, 255, 0.15); }
-
-.content { max-width: 900px; margin: 24px auto; padding: 0 24px 60px; }
+.content { max-width: 900px; margin: 0 auto; }
 .loading { text-align: center; padding: 80px 20px; color: #9ca3af; }
 .spinner { width: 36px; height: 36px; border: 3px solid #e5e7eb; border-top-color: #ff6b35; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
 @keyframes spin { to { transform: rotate(360deg); } }

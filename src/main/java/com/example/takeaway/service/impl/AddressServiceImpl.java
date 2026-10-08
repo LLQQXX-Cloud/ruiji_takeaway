@@ -6,7 +6,7 @@
 package com.example.takeaway.service.impl;
 
 import com.example.takeaway.entity.Address;
-import com.example.takeaway.mapper.impl.AddressRepository;
+import com.example.takeaway.mapper.AddressRepository;
 import com.example.takeaway.service.Service.AddressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

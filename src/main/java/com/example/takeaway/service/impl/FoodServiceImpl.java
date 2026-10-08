@@ -6,7 +6,7 @@
 package com.example.takeaway.service.impl;
 
 import com.example.takeaway.entity.Food;
-import com.example.takeaway.mapper.impl.FoodRepository;
+import com.example.takeaway.mapper.FoodRepository;
 import com.example.takeaway.service.Service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

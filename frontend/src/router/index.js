@@ -1,11 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from '../views/Login.vue'
+import BusinessLogin from '../views/BusinessLogin.vue'
+import UserLayout from '../components/UserLayout.vue'
+import BusinessLayout from '../components/BusinessLayout.vue'
 import Home from '../views/Home.vue'
 import Business from '../views/Business.vue'
 import Cart from '../views/Cart.vue'
 import Orders from '../views/Orders.vue'
 import AddressManager from '../views/AddressManager.vue'
-import BusinessLogin from '../views/BusinessLogin.vue'
 import BusinessHome from '../views/BusinessHome.vue'
 import BusinessInfo from '../views/BusinessInfo.vue'
 import FoodManage from '../views/FoodManage.vue'
@@ -14,38 +16,9 @@ import BusinessReviews from '../views/BusinessReviews.vue'
 
 const routes = [
   {
-    path: '/',
-    redirect: '/login'
-  },
-  {
     path: '/login',
     name: 'Login',
     component: Login
-  },
-  {
-    path: '/home',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/business/:id',
-    name: 'Business',
-    component: Business
-  },
-  {
-    path: '/cart',
-    name: 'Cart',
-    component: Cart
-  },
-  {
-    path: '/orders',
-    name: 'Orders',
-    component: Orders
-  },
-  {
-    path: '/address',
-    name: 'AddressManager',
-    component: AddressManager
   },
   {
     path: '/business-login',
@@ -53,29 +26,70 @@ const routes = [
     component: BusinessLogin
   },
   {
-    path: '/business-home',
-    name: 'BusinessHome',
-    component: BusinessHome
+    path: '/business/:id',
+    name: 'Business',
+    component: Business
   },
+  // 用户端（带左侧导航栏）
   {
-    path: '/business-info',
-    name: 'BusinessInfo',
-    component: BusinessInfo
+    path: '/',
+    component: UserLayout,
+    redirect: '/home',
+    children: [
+      {
+        path: 'home',
+        name: 'Home',
+        component: Home
+      },
+      {
+        path: 'orders',
+        name: 'Orders',
+        component: Orders
+      },
+      {
+        path: 'address',
+        name: 'AddressManager',
+        component: AddressManager
+      },
+      {
+        path: 'cart',
+        name: 'Cart',
+        component: Cart
+      }
+    ]
   },
+  // 商家端（带左侧导航栏）
   {
-    path: '/food-manage',
-    name: 'FoodManage',
-    component: FoodManage
-  },
-  {
-    path: '/business-orders',
-    name: 'BusinessOrders',
-    component: BusinessOrders
-  },
-  {
-    path: '/business-reviews',
-    name: 'BusinessReviews',
-    component: BusinessReviews
+    path: '/business',
+    component: BusinessLayout,
+    redirect: '/business/home',
+    children: [
+      {
+        path: 'home',
+        name: 'BusinessHome',
+        component: BusinessHome
+      },
+      {
+        path: 'info',
+        name: 'BusinessInfo',
+        component: BusinessInfo
+      },
+      {
+        path: 'food',
+        name: 'FoodManage',
+        component: FoodManage
+      },
+      {
+        path: 'orders',
+        name: 'BusinessOrders',
+        component: BusinessOrders
+      },
+      {
+        path: 'reviews',
+        name: 'BusinessReviews',
+        component: BusinessReviews
+      }
+    ]
   }
 ]
 

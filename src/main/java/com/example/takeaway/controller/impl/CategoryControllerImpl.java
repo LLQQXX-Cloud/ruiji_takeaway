@@ -7,7 +7,7 @@ package com.example.takeaway.controller.impl;
 
 import com.example.takeaway.controller.Controller.CategoryController;
 import com.example.takeaway.entity.Category;
-import com.example.takeaway.mapper.impl.CategoryRepository;
+import com.example.takeaway.mapper.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;

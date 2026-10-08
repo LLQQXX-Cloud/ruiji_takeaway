@@ -1,13 +1,5 @@
 <template>
   <div class="cart-container">
-    <header class="header">
-      <div class="header-content">
-        <button @click="goBack" class="btn-back">← 返回</button>
-        <h2>购物车</h2>
-        <button @click="goToOrders" class="btn-ghost">我的订单</button>
-      </div>
-    </header>
-
     <div class="content">
       <div v-if="loading" class="loading">
         <div class="spinner"></div>
@@ -276,14 +268,6 @@ const showToastMessage = (msg) => {
   }, 2000)
 }
 
-const goBack = () => {
-  router.push('/home')
-}
-
-const goToOrders = () => {
-  router.push('/orders')
-}
-
 const goHome = () => {
   router.push('/home')
 }
@@ -302,74 +286,12 @@ onMounted(() => {
 <style scoped>
 .cart-container {
   min-height: 100vh;
-  background: #f8f9fb;
-}
-
-/* Header */
-.header {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  color: white;
-  padding: 18px 24px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
-}
-
-.header-content {
-  max-width: 900px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.header h2 {
-  margin: 0;
-  font-size: 20px;
-  font-weight: 800;
-  letter-spacing: -0.3px;
-}
-
-.btn-back {
-  padding: 10px 20px;
-  background: rgba(255, 255, 255, 0.08);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 14px;
-  transition: all 0.25s;
-  font-family: inherit;
-}
-
-.btn-back:hover {
-  background: rgba(255, 255, 255, 0.15);
-}
-
-.btn-ghost {
-  padding: 10px 18px;
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 500;
-  font-size: 14px;
-  transition: all 0.25s;
-  font-family: inherit;
-}
-
-.btn-ghost:hover {
-  background: rgba(255, 255, 255, 0.15);
 }
 
 /* Content */
 .content {
   max-width: 900px;
-  margin: 24px auto;
-  padding: 0 24px 60px;
+  margin: 0 auto;
 }
 
 .loading {

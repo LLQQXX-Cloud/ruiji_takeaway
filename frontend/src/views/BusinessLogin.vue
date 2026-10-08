@@ -85,7 +85,7 @@ const handleSubmit = async () => {
         messageType.value = 'success'
         message.value = '登录成功！'
         setTimeout(() => {
-          router.push('/business-home')
+          router.push('/business/home')
         }, 1000)
       } else {
         messageType.value = 'error'

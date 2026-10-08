@@ -1,10 +1,8 @@
 <template>
   <div class="address-manager">
-    <header class="header">
-      <button @click="goBack" class="btn-back">← 返回</button>
-      <h2>收货地址</h2>
+    <div class="toolbar">
       <button @click="showAddModal = true" class="btn-add">+ 添加</button>
-    </header>
+    </div>
 
     <div class="address-list">
       <div v-for="address in addresses" :key="address.id" class="address-card" :class="{ 'is-default': address.isDefault }">
@@ -76,11 +74,9 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import { addressApi } from '../api/address'
 import { provinces, cities, districts } from '../data/regions'
 
-const router = useRouter()
 const addresses = ref([])
 const showAddModal = ref(false)
 const editingAddress = ref(null)
@@ -91,8 +87,6 @@ const userId = parseInt(localStorage.getItem('userId')) || 1
 
 const currentCities = computed(() => { if (!formData.value.province) return []; const province = provinces.find(p => p.name === formData.value.province); if (!province) return []; return cities[province.code] || [] })
 const currentDistricts = computed(() => { if (!formData.value.city || !formData.value.province) return []; const province = provinces.find(p => p.name === formData.value.province); if (!province) return []; const city = (cities[province.code] || []).find(c => c.name === formData.value.city); if (!city) return []; return districts[city.code] || [] })
-
-const goBack = () => router.back()
 
 const loadAddresses = async () => { const res = await addressApi.getAddresses(userId); if (res.data.success) addresses.value = res.data.data }
 
@@ -119,12 +113,9 @@ onMounted(() => loadAddresses())
 </script>
 
 <style scoped>
-.address-manager { max-width: 800px; margin: 0 auto; padding: 24px; min-height: 100vh; background: #f8f9fb; }
+.address-manager { max-width: 800px; margin: 0 auto; min-height: 100vh; }
 
-.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
-.header h2 { color: #1a1a2e; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.5px; }
-.btn-back { padding: 10px 20px; background: #f3f4f6; color: #374151; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 14px; font-family: inherit; transition: all 0.25s; }
-.btn-back:hover { background: #e5e7eb; }
+.toolbar { display: flex; justify-content: flex-end; margin-bottom: 20px; }
 .btn-add { padding: 10px 22px; background: linear-gradient(135deg, #ff6b35, #f7931e); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 14px; font-family: inherit; box-shadow: 0 2px 8px rgba(255,107,53,0.25); transition: all 0.25s; }
 .btn-add:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(255,107,53,0.35); }
 
